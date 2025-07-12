@@ -1,0 +1,49 @@
+<?php
+require('db.php');
+include("auth.php");
+
+$status = "";
+
+if (isset($_POST['new']) && $_POST['new'] == 1) {
+    $trn_date = date("Y-m-d H:i:s");
+    $name = mysqli_real_escape_string($con, $_REQUEST['name']);
+    $age = mysqli_real_escape_string($con, $_REQUEST['age']);
+    $submittedby = $_SESSION["username"];
+    
+    $ins_query = "INSERT INTO new_record (trn_date, name, age, submittedby) 
+                  VALUES ('$trn_date', '$name', '$age', '$submittedby')";
+    
+    if (mysqli_query($con, $ins_query)) {
+        $status = "New Record Inserted Successfully. <br/>
+                  <a href='view.php'>View Inserted Records</a>";
+    } else {
+        $status = "Error: " . mysqli_error($con);
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Insert New Record</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="form">
+        <p><a href="dashboard.php">Dashboard</a> 
+        | <a href="view.php">View Records</a> 
+        | <a href="logout.php">Logout</a></p>
+        
+        <div>
+            <h1>Insert New Record</h1>
+            <form name="form" method="post" action="">
+                <input type="hidden" name="new" value="1">
+                <p><input type="text" name="name" placeholder="Enter Name" required /></p>
+                <p><input type="text" name="age" placeholder="Enter Age" required /></p>
+                <p><input name="submit" type="submit" value="Submit" /></p>
+            </form>
+            <p style="color:#FF0000;"><?php echo $status; ?></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Data</title>
+    <style>
+        .error { color: red; }
+        .book { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Book Information</h1>
+    <div id="loading">Loading book data...</div>
+    <div id="bookContainer"></div>
+    <div id="errorContainer" class="error"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('bookContainer');
+            const errorDiv = document.getElementById('errorContainer');
+            const loadingDiv = document.getElementById('loading');
+            
+            fetch('books.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+                    
+                    // Handle both array and object response formats
+                    const books = Array.isArray(data) ? data : (data.books || []);
+                    
+                    if (books.length === 0) {
+                        container.innerHTML = '<p>No books found in the data.</p>';
+                        return;
+                    }
+                    
+                    books.forEach(book => {
+                        const bookDiv = document.createElement('div');
+                        bookDiv.className = 'book';
+                        bookDiv.innerHTML = `
+                            <h3>${book.title || 'Untitled Book'}</h3>
+                            <p><strong>Author:</strong> ${book.author || 'Unknown'}</p>
+                            ${book.publication_year ? `<p><strong>Published:</strong> ${book.publication_year}</p>` : ''}
+                            ${book.genres ? `<p><strong>Genres:</strong> ${book.genres.join(', ')}</p>` : ''}
+                        `;
+                        container.appendChild(bookDiv);
+                    });
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    console.error('Error:', error);
+                    errorDiv.innerHTML = `
+                        <p>Error loading book data: ${error.message}</p>
+                        <p>Please ensure:</p>
+                        <ul>
+                            <li>The books.json file exists</li>
+                            <li>You're running this through a web server</li>
+                            <li>The JSON format is valid</li>
+                        </ul>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>

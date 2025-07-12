@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery DOM Operations</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        .mystyle {
+            background-color: coral;
+            padding: 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>jQuery Examples</h1>
+    
+    <div id="myElement">Original Text</div>
+    
+    <div id="myDIV">
+        <p>I am a myDIV.</p>
+    </div>
+    
+    <button id="myButton">Click me</button>
+    <button id="toggleButton">Toggle Style</button>
+    
+    <ul id="sampleList">
+        <li>Item 1</li>
+        <li>Item 2</li>
+    </ul>
+    
+    <script>
+        $(document).ready(function() {
+            // Basic text modification
+            $("#myElement").text("Modified Text with jQuery");
+            
+            // Add class to element
+            $("#myDIV").addClass("mystyle");
+            
+            // Click event handler
+            $("#myButton").click(function() {
+                alert("Button clicked!");
+                $(this).addClass("highlight");
+            });
+            
+            // Toggle functionality
+            $("#toggleButton").click(function() {
+                $("#myDIV").toggleClass("mystyle");
+            });
+            
+            // Dynamic element creation
+            $("<li>").text("Dynamic Item").appendTo("#sampleList");
+        });
+    </script>
+</body>
+</html>
